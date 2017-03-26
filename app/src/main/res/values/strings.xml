@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">RetrofitService</string>
+    <string name="FOUR_SQUARE_VERSION">20161016</string>
+    <string name="NEAR_SOFT_LAT_LNG">29.097453, -111.022178</string>
+</resources>
