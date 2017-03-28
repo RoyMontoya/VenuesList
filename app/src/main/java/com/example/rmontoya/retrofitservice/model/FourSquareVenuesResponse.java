@@ -14,4 +14,5 @@ public class FourSquareVenuesResponse {
     public List<FourSquareVenue> getVenues() {
         return venues;
     }
+
 }

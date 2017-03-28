@@ -12,4 +12,5 @@ public class FourSquareVenuesBody {
     public FourSquareVenuesResponse getResponse() {
         return response;
     }
+
 }

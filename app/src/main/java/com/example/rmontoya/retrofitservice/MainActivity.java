@@ -81,4 +81,5 @@ public class MainActivity extends AppCompatActivity implements Callback<FourSqua
     public void onFailure(Call<FourSquareVenuesBody> call, Throwable t) {
         t.getCause();
     }
+
 }

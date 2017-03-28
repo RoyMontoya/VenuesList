@@ -13,7 +13,6 @@ import java.util.List;
 public class VenueAdapter extends RecyclerView.Adapter<VenueAdapter.VenueViewHolder> {
     private List<FourSquareVenue> items;
 
-
     public VenueAdapter(List<FourSquareVenue> fourSquareVenues) {
         this.items = fourSquareVenues;
     }
@@ -37,6 +36,7 @@ public class VenueAdapter extends RecyclerView.Adapter<VenueAdapter.VenueViewHol
     }
 
     class VenueViewHolder extends RecyclerView.ViewHolder {
+        
         TextView venueNameTextView;
 
         VenueViewHolder(View itemView) {
@@ -44,4 +44,5 @@ public class VenueAdapter extends RecyclerView.Adapter<VenueAdapter.VenueViewHol
             venueNameTextView = (TextView) itemView.findViewById(android.R.id.text1);
         }
     }
+
 }
