@@ -42,7 +42,6 @@ public class MainActivity extends AppCompatActivity implements Callback<FourSqua
     private String LOCATION;
     private String VERSION;
     private LocationManager locationManager;
-    private Location userLocation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,7 +87,7 @@ public class MainActivity extends AppCompatActivity implements Callback<FourSqua
 
     private void getCurrentLocation() {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            userLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+            Location userLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
             requestVenuesFromLocation(formatLatLngForRequest(userLocation));
         } else {
             requestLocationPermissionToUser();
@@ -103,9 +102,8 @@ public class MainActivity extends AppCompatActivity implements Callback<FourSqua
 
     private String formatLatLngForRequest(Location location) {
         String latLng = LOCATION;
-        if (location != null) {
+        if (location != null)
             latLng = location.getLatitude() + LAT_LNG_SEPARATOR + location.getLongitude();
-        }
         return latLng;
     }
 
