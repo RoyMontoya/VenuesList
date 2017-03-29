@@ -32,8 +32,10 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainActivity extends AppCompatActivity implements Callback<FourSquareVenuesBody> {
+
     private static final int REQUEST_ACCESS_FINE_LOCATION = 1;
     private static final int REQUEST_LOCATION_ENABLED = 0;
+    private final String LAT_LNG_SEPARATOR = ", ";
     //To get client_id and client secret for fourSquare please visit: https://developer.foursquare.com/
     private String CLIENT_ID;
     private String CLIENT_SECRET;
@@ -87,7 +89,7 @@ public class MainActivity extends AppCompatActivity implements Callback<FourSqua
     private void getCurrentLocation() {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             userLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-                requestVenuesFromLocation(formatLatLngForRequest(userLocation));
+            requestVenuesFromLocation(formatLatLngForRequest(userLocation));
         } else {
             requestLocationPermissionToUser();
         }
@@ -102,7 +104,7 @@ public class MainActivity extends AppCompatActivity implements Callback<FourSqua
     private String formatLatLngForRequest(Location location) {
         String latLng = LOCATION;
         if (location != null) {
-            latLng = location.getLatitude() + ", " + location.getLongitude();
+            latLng = location.getLatitude() + LAT_LNG_SEPARATOR + location.getLongitude();
         }
         return latLng;
     }
@@ -146,6 +148,11 @@ public class MainActivity extends AppCompatActivity implements Callback<FourSqua
         recyclerList.setAdapter(adapter);
     }
 
+    private void showErrorToast(String message) {
+        Toast.makeText(this, message, Toast.LENGTH_LONG)
+                .show();
+    }
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         if (requestCode == REQUEST_ACCESS_FINE_LOCATION && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
@@ -163,11 +170,6 @@ public class MainActivity extends AppCompatActivity implements Callback<FourSqua
         } else {
             showErrorToast(getString(R.string.location_error_text));
         }
-    }
-
-    private void showErrorToast(String message) {
-        Toast.makeText(this, message, Toast.LENGTH_LONG)
-                .show();
     }
 
     @Override
