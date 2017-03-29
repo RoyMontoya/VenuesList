@@ -9,7 +9,11 @@ public class FourSquareVenuesResponse {
 
     @SerializedName("venues")
     @Expose
-    List<FourSquareVenue> venues;
+    private List<FourSquareVenue> venues;
+
+    public FourSquareVenuesResponse(List<FourSquareVenue> venues){
+        this.venues = venues;
+    }
 
     public List<FourSquareVenue> getVenues() {
         return venues;
