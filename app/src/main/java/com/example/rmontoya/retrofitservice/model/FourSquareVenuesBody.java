@@ -7,7 +7,11 @@ public class FourSquareVenuesBody {
 
     @SerializedName("response")
     @Expose
-    FourSquareVenuesResponse response;
+    private FourSquareVenuesResponse response;
+
+    public FourSquareVenuesBody(FourSquareVenuesResponse response) {
+        this.response = response;
+    }
 
     public FourSquareVenuesResponse getResponse() {
         return response;
