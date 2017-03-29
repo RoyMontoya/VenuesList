@@ -5,7 +5,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
-import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -41,6 +40,7 @@ public class MainActivity extends AppCompatActivity implements Callback<FourSqua
     private String LOCATION;
     private String VERSION;
     private LocationManager locationManager;
+    private Location userLocation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,14 +86,14 @@ public class MainActivity extends AppCompatActivity implements Callback<FourSqua
 
     private void getCurrentLocation() {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            Location location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-            requestVanuesFromLocation(formatLatLngForRequest(location));
+            userLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                requestVenuesFromLocation(formatLatLngForRequest(userLocation));
         } else {
             requestLocationPermissionToUser();
         }
     }
 
-    private void requestVanuesFromLocation(String location) {
+    private void requestVenuesFromLocation(String location) {
         buildRetrofitService()
                 .getFourSquareVenues(VERSION, location,
                         CLIENT_ID, CLIENT_SECRET).enqueue(this);
