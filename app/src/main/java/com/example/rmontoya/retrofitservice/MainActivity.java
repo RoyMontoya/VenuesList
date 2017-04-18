@@ -14,6 +14,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.example.rmontoya.retrofitservice.adapter.VenueAdapter;
@@ -29,7 +30,11 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
+import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
+import rx.Subscriber;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 public class MainActivity extends AppCompatActivity implements Callback<FourSquareVenuesBody> {
 
@@ -97,7 +102,25 @@ public class MainActivity extends AppCompatActivity implements Callback<FourSqua
     private void requestVenuesFromLocation(String location) {
         buildRetrofitService()
                 .getFourSquareVenues(VERSION, location,
-                        CLIENT_ID, CLIENT_SECRET).enqueue(this);
+                        CLIENT_ID, CLIENT_SECRET)
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<FourSquareVenuesBody>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Log.d("ERROR", e.getMessage());
+                    }
+
+                    @Override
+                    public void onNext(FourSquareVenuesBody fourSquareVenuesBody) {
+                        setRecyclerView(fourSquareVenuesBody.getResponse().getVenues());
+                    }
+                });
     }
 
     private String formatLatLngForRequest(Location location) {
@@ -124,6 +147,7 @@ public class MainActivity extends AppCompatActivity implements Callback<FourSqua
                 .client(buildLoggingInterceptor())
                 .baseUrl("https://api.foursquare.com/v2/")
                 .addConverterFactory(GsonConverterFactory.create())
+                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                 .build();
 
         return retrofit.create(FourSquareService.class);
