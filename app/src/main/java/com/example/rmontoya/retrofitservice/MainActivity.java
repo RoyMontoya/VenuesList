@@ -20,6 +20,7 @@ import com.example.rmontoya.retrofitservice.adapter.VenueAdapter;
 import com.example.rmontoya.retrofitservice.model.FourSquareVenue;
 import com.example.rmontoya.retrofitservice.retrofit.FourSquareService;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import okhttp3.OkHttpClient;
@@ -27,6 +28,7 @@ import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
+import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
@@ -85,14 +87,18 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void requestVenuesFromLocation(String location) {
+        final List<FourSquareVenue> filteredVanues = new ArrayList<>();
         buildRetrofitService()
                 .getFourSquareVenues(VERSION, location,
                         CLIENT_ID, CLIENT_SECRET)
+                .flatMap(fourSquareVenuesBody -> Observable.from(fourSquareVenuesBody.getResponse().getVenues())
+                        .filter(vanue -> vanue.getName().contains("Nearsoft")))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
-                        fourSquareVenuesBody -> setRecyclerView(fourSquareVenuesBody.getResponse().getVenues()),
-                        throwable -> Log.d("Error", throwable.getMessage()));
+                        filteredVanues::add,
+                        throwable -> Log.d("Error", throwable.getMessage()),
+                        () -> setRecyclerView(filteredVanues));
     }
 
     private String formatLatLngForRequest(Location location) {
