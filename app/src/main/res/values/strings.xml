@@ -2,4 +2,8 @@
     <string name="app_name">RetrofitService</string>
     <string name="FOUR_SQUARE_VERSION">20161016</string>
     <string name="NEAR_SOFT_LAT_LNG">29.097453, -111.022178</string>
+    <string name="permission_error_text">The application Cannot work without the permission to access your location</string>
+    <string name="location_dialog_title">Location Enabled Required</string>
+    <string name="location_dialog_message">Would you like to go to Location settings to activate this option?</string>
+    <string name="location_error_text">This app cannot work without Location enabled</string>
 </resources>

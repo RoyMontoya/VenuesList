@@ -36,13 +36,14 @@ public class VenueAdapter extends RecyclerView.Adapter<VenueAdapter.VenueViewHol
     }
 
     class VenueViewHolder extends RecyclerView.ViewHolder {
-        
+
         TextView venueNameTextView;
 
         VenueViewHolder(View itemView) {
             super(itemView);
             venueNameTextView = (TextView) itemView.findViewById(android.R.id.text1);
         }
+
     }
 
 }

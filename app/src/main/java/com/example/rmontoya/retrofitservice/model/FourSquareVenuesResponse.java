@@ -11,7 +11,7 @@ public class FourSquareVenuesResponse {
     @Expose
     private List<FourSquareVenue> venues;
 
-    public FourSquareVenuesResponse(List<FourSquareVenue> venues){
+    public FourSquareVenuesResponse(List<FourSquareVenue> venues) {
         this.venues = venues;
     }
 
