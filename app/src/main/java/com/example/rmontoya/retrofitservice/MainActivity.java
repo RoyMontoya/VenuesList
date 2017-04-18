@@ -1,7 +1,6 @@
 package com.example.rmontoya.retrofitservice;
 
 import android.Manifest;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -19,24 +18,19 @@ import android.widget.Toast;
 
 import com.example.rmontoya.retrofitservice.adapter.VenueAdapter;
 import com.example.rmontoya.retrofitservice.model.FourSquareVenue;
-import com.example.rmontoya.retrofitservice.model.FourSquareVenuesBody;
 import com.example.rmontoya.retrofitservice.retrofit.FourSquareService;
 
 import java.util.List;
 
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
-import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-public class MainActivity extends AppCompatActivity implements Callback<FourSquareVenuesBody> {
+public class MainActivity extends AppCompatActivity {
 
     private static final int REQUEST_ACCESS_FINE_LOCATION = 1;
     private static final int REQUEST_LOCATION_ENABLED = 0;
@@ -69,18 +63,9 @@ public class MainActivity extends AppCompatActivity implements Callback<FourSqua
         final AlertDialog.Builder builder = new AlertDialog.Builder(this)
                 .setTitle(R.string.location_dialog_title)
                 .setMessage(R.string.location_dialog_message)
-                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        showLocationSettings();
-                    }
-                })
-                .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        showErrorToast(getString(R.string.location_error_text));
-                    }
-                });
+                .setPositiveButton(android.R.string.ok, (dialogInterface, i) -> showLocationSettings())
+                .setNegativeButton(android.R.string.cancel, (dialogInterface, i) ->
+                        showErrorToast(getString(R.string.location_error_text)));
         builder.create()
                 .show();
     }
@@ -105,22 +90,9 @@ public class MainActivity extends AppCompatActivity implements Callback<FourSqua
                         CLIENT_ID, CLIENT_SECRET)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Subscriber<FourSquareVenuesBody>() {
-                    @Override
-                    public void onCompleted() {
-
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        Log.d("ERROR", e.getMessage());
-                    }
-
-                    @Override
-                    public void onNext(FourSquareVenuesBody fourSquareVenuesBody) {
-                        setRecyclerView(fourSquareVenuesBody.getResponse().getVenues());
-                    }
-                });
+                .subscribe(
+                        fourSquareVenuesBody -> setRecyclerView(fourSquareVenuesBody.getResponse().getVenues()),
+                        throwable -> Log.d("Error", throwable.getMessage()));
     }
 
     private String formatLatLngForRequest(Location location) {
@@ -192,16 +164,6 @@ public class MainActivity extends AppCompatActivity implements Callback<FourSqua
         } else {
             showErrorToast(getString(R.string.location_error_text));
         }
-    }
-
-    @Override
-    public void onResponse(Call<FourSquareVenuesBody> call, Response<FourSquareVenuesBody> response) {
-        setRecyclerView(response.body().getResponse().getVenues());
-    }
-
-    @Override
-    public void onFailure(Call<FourSquareVenuesBody> call, Throwable t) {
-        t.printStackTrace();
     }
 
 }
