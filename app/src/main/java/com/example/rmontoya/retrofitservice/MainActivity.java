@@ -103,7 +103,7 @@ public class MainActivity extends AppCompatActivity implements Callback<FourSqua
         buildRetrofitService()
                 .getFourSquareVenues(VERSION, location,
                         CLIENT_ID, CLIENT_SECRET)
-                .subscribeOn(Schedulers.newThread())
+                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Subscriber<FourSquareVenuesBody>() {
                     @Override
